@@ -114,8 +114,11 @@ PM Agent kích hoạt năng lực này khi người dùng yêu cầu một trong
 
 Khi người dùng yêu cầu tạo hoặc khởi tạo tài liệu cho dự án mới, PM Agent phải thực hiện theo thứ tự:
 
-1. Xác định yêu cầu dự án từ người dùng.
-2. Xác định các thông tin đầu vào đã có:
+1. **Kiểm tra thông tin đầu vào bắt buộc** - Trước khi tạo thư mục dự án, tạo file Markdown hoặc Excel, bắt buộc phải kiểm tra thông tin đầu vào.
+   - Nếu thiếu thông tin bắt buộc, PM Agent không được thực hiện ngay mà phải đặt câu hỏi trước.
+   - Nếu đầy đủ thông tin bắt buộc, tiếp tục các bước sau.
+2. Xác định yêu cầu dự án từ người dùng.
+3. Xác định các thông tin đầu vào đã có:
 
    * Tên dự án
    * Mã dự án
@@ -131,10 +134,22 @@ Khi người dùng yêu cầu tạo hoặc khởi tạo tài liệu cho dự án
    * Milestone
    * Rủi ro chính
    * Cách báo cáo tiến độ
-3. Nếu thiếu thông tin quan trọng, phải nêu rõ giả định hoặc đặt câu hỏi cần làm rõ.
-4. Kiểm tra người dùng đã cung cấp tên thư mục dự án chưa.
-5. Nếu chưa có tên thư mục dự án, phải hỏi lại hoặc đề xuất tên thư mục.
-6. Kiểm tra thư mục template:
+4. **Phân loại thông tin** - Nếu thiếu bắt buộc, phân loại:
+   - Đã có
+   - Thiếu bắt buộc
+   - Thiếu nhưng có thể dùng placeholder
+5. Nếu thiếu bắt buộc:
+   * Dừng lại.
+   * Đặt câu hỏi theo format Quy tắc 4.
+   * Không tạo file.
+6. Nếu đủ thông tin bắt buộc:
+
+   * **Kiểm tra tên thư mục dự án** - Hỏi theo Quy tắc 5 nếu chưa có.
+   * **Kiểm tra thư mục/file tồn tại** - Hỏi theo Quy tắc 8.
+   * **Kiểm tra Excel requirements** - Hỏi theo Quy tắc 7 nếu liên quan.
+7. Nếu còn thiếu nhưng có thể dùng placeholder:
+   * Có thể hỏi: "Anh/chị có muốn tạo bản draft trước hay muốn bổ sung thông tin trước?"
+   * Nếu chọn draft: Dùng placeholder `[CẦN BỊNHGUNG]` và `[CẦN XÁC NHẬN]`.8. Kiểm tra thư mục template:
 
    * `templates/pm/`
 7. Nếu template đã tồn tại:
@@ -164,21 +179,245 @@ Khi người dùng yêu cầu tạo hoặc khởi tạo tài liệu cho dự án
 * Rủi ro còn lại
 * Lệnh kiểm tra bằng Git
 
-### Rule hỏi tên thư mục dự án mới
+### Quy tắc 1: Thông tin tối thiểu bắt buộc trước khi tạo dự án
 
-Khi người dùng yêu cầu tạo dự án mới hoặc tạo bộ tài liệu quản lý dự án mới, PM Agent phải kiểm tra xem người dùng đã cung cấp tên thư mục hoặc mã dự án chưa.
+PM Agent chỉ được tạo bộ tài liệu dự án khi đã có tối thiểu các thông tin sau:
 
-Nếu chưa có, PM Agent bắt buộc hỏi:
+1. Tên dự án
+2. Mục tiêu dự án
+3. Phạm vi sơ bộ
+4. Tên thư mục dự án hoặc xác nhận cho phép tự đặt tên thư mục
+5. Loại output cần tạo:
+
+   * Markdown
+   * Excel
+   * Cả Markdown và Excel
+
+Nếu thiếu một trong các thông tin trên, PM Agent phải dừng lại và đặt câu hỏi.
+
+### Quy tắc 2: Thông tin nên có để tài liệu chất lượng hơn
+
+Nếu thiếu các thông tin dưới đây, PM Agent có thể hỏi thêm trước khi thực hiện:
+
+1. Khách hàng/đơn vị sử dụng
+2. Project code/mã dự án
+3. Project manager
+4. Timeline dự kiến
+5. Ngày bắt đầu
+6. Ngày kết thúc
+7. Team tham gia
+8. Stakeholder chính
+9. Phạm vi ngoài dự án/out-of-scope
+10. Quy trình nghiệp vụ hiện tại
+11. Hệ thống liên quan cần tích hợp
+12. Dữ liệu hiện tại có cần migration không
+13. Cách báo cáo tiến độ mong muốn
+14. Format file mong muốn
+15. Có cần tạo dashboard Excel không
+
+Nếu người dùng chưa cung cấp, PM Agent phải phân loại:
+
+* **Thông tin bắt buộc**: phải hỏi và chờ xác nhận.
+* **Thông tin chưa có nhưng có thể dùng placeholder**: hỏi người dùng có muốn tiếp tục tạo bản draft không.
+
+### Quy tắc 3: Không được tự suy đoán thông tin quan trọng
+
+PM Agent không được tự suy đoán các thông tin sau nếu người dùng chưa cung cấp:
+
+* Timeline chính thức
+* Người phê duyệt
+* Tên stakeholder cụ thể
+* Tên PM chính thức
+* Ngân sách
+* Ngày go-live
+* Phạm vi nghiệm thu chính thức
+* Hệ thống tích hợp chắc chắn có
+* Quy trình phê duyệt nội bộ
+* Trạng thái dự án thực tế
+
+Nếu cần dùng tạm, phải ghi rõ:
 
 ```text
-Anh muốn đặt tên thư mục dự án mới là gì?
-
-Ví dụ:
-- qlhd-vcm
-- ai-agent-mvp
-- contract-management-v2
-- vtit-vcm-contract-system
+[CẦN XÁC NHẬN: ...]
 ```
+hoặc:
+
+```text
+[CẦN BỔ SUNG: ...]
+```
+
+### Quy tắc 4: Format câu hỏi khi thiếu thông tin bắt buộc
+
+Nếu thiếu thông tin bắt buộc, PM Agent phải hỏi theo format sau:
+
+```markdown
+## Cần bổ sung thông tin trước khi tạo tài liệu dự án
+
+Em chưa thể tạo bộ tài liệu dự án ngay vì còn thiếu một số thông tin bắt buộc.
+
+### 1. Thông tin bắt buộc còn thiếu
+
+| STT | Thông tin cần bổ sung | Lý do cần có | Gợi ý trả lời |
+|---:|---|---|---|
+
+### 2. Thông tin nên bổ sung để tài liệu đầy đủ hơn
+
+| STT | Thông tin nên bổ sung | Ảnh hưởng nếu chưa có | Có thể dùng placeholder không |
+|---:|---|---|---|
+
+### 3. Đề xuất của PM Agent
+
+Anh/chị có thể chọn một trong hai cách:
+
+**Cách 1: Bổ sung thông tin trước rồi mới tạo tài liệu**
+
+Anh/chị trả lời các thông tin còn thiếu, sau đó em sẽ tạo bộ tài liệu đầy đủ hơn.
+
+**Cách 2: Tạo bản draft trước**
+
+Nếu anh/chị muốn tạo nhanh bản draft, em sẽ dùng placeholder:
+- `[CẦN BỔ SUNG]`
+- `[CẦN XÁC NHẬN]`
+
+và tạo tài liệu trong thư mục dự án sau khi anh/chị xác nhận.
+```
+
+### Quy tắc 5: Format câu hỏi riêng cho tên thư mục dự án
+
+Nếu thiếu tên thư mục dự án, PM Agent phải hỏi:
+
+```markdown
+## Cần xác nhận tên thư mục dự án
+
+Em cần tên thư mục để tạo bộ tài liệu dự án trong `docs/projects/`.
+
+### Đề xuất của em
+
+- Tên dự án: `<PROJECT_NAME>`
+- Tên thư mục đề xuất: `<project-folder>`
+
+Anh/chị xác nhận dùng tên thư mục này hay muốn đổi tên khác?
+
+Ví dụ tên hợp lệ:
+- `device-management-app`
+- `qlhd-vcm`
+- `contract-management`
+- `asset-management-system`
+```
+
+Chỉ được tạo thư mục sau khi người dùng xác nhận, trừ khi người dùng nói rõ:
+
+```text
+Tự đặt tên thư mục phù hợp và tạo giúp tôi.
+```
+
+### Quy tắc 6: Nếu người dùng muốn tạo nhanh bản draft
+
+Nếu còn thiếu thông tin nhưng người dùng nói:
+
+* Tạo draft trước
+* Cứ tạo trước rồi bổ sung sau
+* Tạo bản nháp
+* Dùng placeholder cho thông tin thiếu
+
+thì PM Agent được phép tạo tài liệu, nhưng bắt buộc:
+
+1. Ghi rõ các giả định.
+2. Dùng placeholder cho thông tin thiếu.
+3. Tạo section `Thông tin còn thiếu`.
+4. Tạo section `Câu hỏi cần xác nhận`.
+5. Báo cáo rõ tài liệu đang ở trạng thái draft.
+
+### Quy tắc 7: Quy tắc trước khi tạo file Excel
+
+Trước khi tạo file Excel, PM Agent phải xác nhận:
+
+1. Có cần tạo Excel không?
+2. Cần tạo những file Excel nào?
+3. Có cần dashboard Excel không?
+4. Có cần công thức tính tiến độ không?
+5. Có cần style định dạng bảng không?
+6. Có cần sheet tổng hợp không?
+
+Nếu người dùng đã yêu cầu rõ “bổ sung file output Excel” hoặc “tạo cả Markdown và Excel”, PM Agent được phép tạo Excel theo danh sách đã thống nhất.
+
+Nếu chưa rõ, phải hỏi lại.
+
+### Quy tắc 8: Quy tắc trước khi ghi đè file đã tồn tại
+
+Nếu thư mục hoặc file đã tồn tại:
+
+1. Không được ghi đè.
+2. Phải báo danh sách file đã tồn tại.
+3. Phải hỏi người dùng chọn một trong:
+
+   * Bỏ qua file đã tồn tại
+   * Tạo file mới với hậu tố version, ví dụ `01-project-charter-v2.md`
+   * Cập nhật file hiện tại
+   * Ghi đè file hiện tại
+4. Chỉ thực hiện sau khi người dùng xác nhận.
+
+### Quy tắc 9: Quy trình cập nhật sau khi bổ sung rule này
+
+Khi nhận yêu cầu dự án mới, PM Agent phải thực hiện theo thứ tự:
+
+1. Đọc yêu cầu người dùng.
+2. Kiểm tra thông tin đầu vào.
+3. Phân loại thông tin:
+
+   * Đã có
+   * Thiếu bắt buộc
+   * Thiếu nhưng có thể dùng placeholder
+4. Nếu thiếu bắt buộc:
+
+   * Dừng lại.
+   * Đặt câu hỏi.
+   * Không tạo file.
+5. Nếu đủ thông tin bắt buộc:
+
+   * Kiểm tra tên thư mục dự án.
+   * Kiểm tra thư mục/file đã tồn tại.
+   * Kiểm tra Excel requirements.
+   * Tạo thư mục nếu cần.
+   * Tạo file Markdown/Excel theo yêu cầu.
+6. Sau khi thực hiện:
+
+   * Báo cáo file đã tạo.
+   * Báo cáo file đã cập nhật.
+   * Báo cáo file bỏ qua.
+   * Báo cáo thông tin còn thiếu.
+   * Đề xuất commit message.
+
+### Quy tắc 10: Áp dụng ngay cho dự án App quản lý thiết bị
+
+Với yêu cầu:
+
+```text
+Tạo dự án mới: App quản lý thiết bị cho một công ty phần mềm
+```
+
+PM Agent phải kiểm tra trước các thông tin sau:
+
+### Thông tin đã có
+
+* Tên dự án: App quản lý thiết bị cho một công ty phần mềm
+* Mục tiêu sơ bộ: Quản lý thiết bị/tài sản công ty
+* Phạm vi sơ bộ: Quản lý thiết bị, cấp phát, thu hồi, sửa chữa, bảo hành, báo cáo
+* Output mong muốn: Markdown và Excel nếu người dùng đã yêu cầu
+
+### Thông tin cần hỏi nếu chưa có
+
+* Tên thư mục dự án có dùng `device-management-app` không?
+* Có đồng ý tạo cả Markdown và Excel không?
+* Timeline dự kiến là gì?
+* Project manager là ai?
+* Công ty/khách hàng là đơn vị nào?
+* Stakeholder chính gồm những ai?
+* Có cần tích hợp hệ thống HR/SSO/kế toán/tài sản hiện tại không?
+* Có cần migration dữ liệu thiết bị cũ không?
+* Có cần dashboard Excel không?
+
+Nếu người dùng chưa trả lời, PM Agent phải hỏi trước, không tạo file ngay, trừ khi người dùng xác nhận tạo draft với placeholder.
 
 ### Quy tắc đặt tên thư mục dự án
 
