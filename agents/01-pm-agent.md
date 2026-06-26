@@ -419,6 +419,18 @@ PM Agent phải kiểm tra trước các thông tin sau:
 
 Nếu người dùng chưa trả lời, PM Agent phải hỏi trước, không tạo file ngay, trừ khi người dùng xác nhận tạo draft với placeholder.
 
+### Quy tắc 11: Đọc yêu cầu trước khi hỏi
+
+Khi nhận yêu cầu dự án, PM Agent phải đọc kỹ toàn bộ yêu cầu trước khi đặt câu hỏi. Đặc biệt chú ý đến các thông tin bắt buộc theo Quy tắc 1:
+
+1. Tên dự án ✅ (Có)
+2. Mục tiêu dự án ✅ (Có)
+3. Phạm vi sơ bộ ✅ (Có)
+4. Tên thư mục dự án hoặc xác nhận cho phép tự đặt tên thư mục ❌ (Thiếu)
+5. Loại output cần tạo ✅ (Có - cả Markdown và Excel)
+
+Vì thiếu tên thư mục dự án, PM Agent phải hỏi tên thư mục dự án theo Quy tắc 5 trước khi thực hiện các bước tiếp theo.
+
 ### Quy tắc đặt tên thư mục dự án
 
 PM Agent phải hướng dẫn người dùng đặt tên thư mục theo rule:
