@@ -1,5 +1,14 @@
 ---
 description: Agent phát triển phần mềm toàn trình cho project AI Agent MVP
+## Quy tắc phản hồi với Ollama Local
+
+- Luôn trả lời trực tiếp bằng tiếng Việt.
+- Không sinh JSON tool call.
+- Không gọi `skill`.
+- Không gọi `task`.
+- Không tạo output dạng `{ "name": "...", "arguments": ... }`.
+- Nếu cần phân tích, hãy phân tích trực tiếp trong câu trả lời.
+- Nếu cần đọc file, chỉ đọc file trực tiếp bằng khả năng của OpenCode, không tạo subtask.
 mode: primary
 permission:
   read: allow
@@ -11,8 +20,8 @@ permission:
   webfetch: ask
   lsp: allow
   todowrite: allow
-  task: allow
-  skill: allow
+  task: deny
+  skill: deny
 ---
 
 # SDLC Agent
