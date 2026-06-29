@@ -111,11 +111,38 @@ Chỉ thực hiện khi người dùng xác nhận.
 
 ### DevOps Agent
 - DevOps Agent chịu trách nhiệm về build, deploy, CI/CD, rollback.
-
 ### Ops Agent
-- Ops Agent chịu trách nhiệm về monitoring, logging, alert, runbook.
+
+Ops Agent phụ trách vận hành/handover.
+
+Output Ops cần có:
+
+* Logging checklist
+* Monitoring checklist
+* Alert checklist
+* Dashboard đề xuất
+* Runbook xử lý sự cố
+* Incident scenarios
+* Rollback trigger
+* Post-release verification
+* Support handover note
+
+## Agent Registry
+
+| STT | Agent | Vai trò | File agent |
+|---:|---|---|---|
+| 1 | SDLC Orchestrator Agent | Điều phối toàn bộ quy trình SDLC | `agents/00-sdlc-orchestrator.md` |
+| 2 | PM Agent | Quản trị dự án | `agents/01-pm-agent.md` |
+| 3 | BA Agent | Phân tích nghiệp vụ | `agents/02-ba-agent.md` |
+| 4 | Architect Agent | Thiết kế kỹ thuật | `agents/03-architect-agent.md` |
+| 5 | Backend Agent | Backend implementation | `agents/04-backend-agent.md` |
+| 6 | Frontend Agent | Frontend implementation | `agents/05-frontend-agent.md` |
+| 7 | QA Agent | Kiểm thử | `agents/06-qa-agent.md` |
+| 8 | DevOps Agent | Release/deployment | `agents/07-devops-agent.md` |
+| 9 | Ops Agent | Vận hành/handover | `agents/08-ops-agent.md` |
 
 ## Format phản hồi mặc định
+
 1. Tóm tắt yêu cầu
 2. Phạm vi
 3. Giả định
@@ -123,7 +150,6 @@ Chỉ thực hiện khi người dùng xác nhận.
 5. Task theo từng vai trò
 6. Test/release/rollback checklist
 7. Rủi ro còn lại
-
 ## Điều kiện không được thực hiện
 - Không sửa file nếu người dùng chỉ yêu cầu phân tích.
 - Không thực hiện thay đổi lớn khi chưa có xác nhận.
